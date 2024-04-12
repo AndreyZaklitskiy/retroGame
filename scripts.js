@@ -80,13 +80,13 @@ class Enemy {
         this.y = y + this.positionY;
         //check collision enemies - projectiles
         this.game.ProjectilesPool.forEach(projectile =>{
-            if(!projectile.free && this.game.checkCollision(this, projectile)){
+            if(!projectile.free && this.game.checkCollision(this, projectile) && this.lives > 0){
                 this.hit(1);
                 projectile.reset();
             }
         });
         if(this.lives < 1){
-            this.frameX++;
+            if(this.game.spriteUpdate) this.frameX++;
             if(this.frameX > this.maxFrame){
                 this.markedForDeletion = true;
                 if(!this.game.gameOver) this.game.score += this.maxLives;
@@ -114,7 +114,7 @@ class Beetlemorph extends Enemy {
     constructor(game, positionX, positionY){
         super(game, positionX, positionY);
         this.image = document.getElementById('beetlemorph');
-        this.frameX = Math.random() < 0.5 ? -1 : 1;
+        this.frameX = 0;
         this.maxFrame = 2;
         this.frameY = Math.floor(Math.random() * 4);
         this.lives = 1;
@@ -129,7 +129,7 @@ class Wave {
         this.height = this.game.rows * this.game.enemySize;
         this.x = this.game.width * 0.5 - this.width * 0.5;
         this.y = 0 - this.height;
-        this.speedX = 1;
+        this.speedX = Math.random() < 0.5 ? -1 : 1;
         this.speedY = 0;
         this.enemies = [];
         this.nextWaveTrigger = false;
@@ -182,6 +182,10 @@ class Game {
         this.waves.push(new Wave(this));
         this.waveCount = 1;
 
+        this.spriteUpdate = false;
+        this.spriteTimer = 0;
+        this.spriteInterval = 120;
+
         this.score = 0;
         this.gameOver = false;
 
@@ -198,7 +202,16 @@ class Game {
             if(index > -1) this.keys.splice(index, 1)
         })
     }
-    render(context) {
+    render(context, deltaTime) {
+        //sprite timing
+        if(this.spriteTimer > this.spriteInterval){
+            this.spriteUpdate = true;
+            this.spriteTimer = 0;
+        }else {
+            this.spriteUpdate = false;
+            this.spriteTimer += deltaTime; 
+        }
+
         this.drawStatusText(context);
         this.player.draw(context);
         this.player.update();
@@ -289,12 +302,15 @@ window.addEventListener('load', function() {
 
     const game = new Game(canvas);
 
-    function animate() {
+    let lastTime = 0;
+    function animate(timeStamp) {
+        const deltaTime = timeStamp - lastTime;11
+        lastTime = timeStamp;
         ctx.clearRect(0,0, canvas.width, canvas.height);
-        game.render(ctx);
+        game.render(ctx, deltaTime);
         window.requestAnimationFrame(animate);
     }
-    animate();
+    animate(0);
 
     console.log(game);
 })
