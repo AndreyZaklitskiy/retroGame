@@ -6,6 +6,6 @@ canvas {
     translate: -50% -50%;
     background: url(sprites/background.png);
 }
-#beetlemorph, #player, #player_jets {
+#beetlemorph, #rhinomorph, #player, #player_jets {
     display: none;
 }
