@@ -15,7 +15,8 @@ class Player {
     }
     draw(context) {
         //handle sprite frames
-        if(this.game.keys.indexOf('1') > -1){
+        if(this.game.keys.indexOf('1') > -1 ||
+           this.game.keys.indexOf(' ') > -1){
             this.frameX = 1;
         }else{
             this.frameX = 0;
@@ -26,10 +27,14 @@ class Player {
     }
     update() {
         //horizontal movement
-        if(this.game.keys.indexOf('ArrowLeft') > -1){
+        if(this.game.keys.indexOf('ArrowLeft') > -1 ||
+            this.game.keys.indexOf('a') > -1 ||
+            this.game.keys.indexOf('ф') > -1 ){
             this.x -= this.speed;
             this.jetsFrame = 0;
-        } else if(this.game.keys.indexOf('ArrowRight') > -1){
+        } else if(this.game.keys.indexOf('ArrowRight') > -1 ||
+                  this.game.keys.indexOf('d') > -1 ||
+                  this.game.keys.indexOf('в') > -1 ){
             this.x += this.speed;
             this.jetsFrame = 2;
         } else {
@@ -157,6 +162,24 @@ class Rhinomorph extends Enemy {
     }
 }
 
+class Boss {
+    constructor(game){
+        this.game = game;
+        this.width = 200;
+        this.height = 200;
+        this.x = this.game.width * 0.5 - this.width * 0.5;
+        this.y = -this.height;
+        this.speedX = Math.random() < 0.5 ? -1 : 1;
+        this.speedY = 0;
+        this.lives = 10;
+        this.maxLives = this.lives;
+        this.markedForDeletion = false;
+        this.image = document.getElementById('boss');
+        this.frameX = 0;
+        this.frameY = Math.floor(Math.random() * 4);
+    }
+}
+
 class Wave {
     constructor(game) {
         this.game = game;
@@ -173,7 +196,6 @@ class Wave {
     render(context) {
         if(this.y < 0) this.y +=5;
         this.speedY = 0;
-        // context.strokeRect(this.x, this.y, this.width, this.height);
         if(this.x < 0 || this.x > this.game.width - this.width) {
             this.speedX *= -1;
             this.speedY = this.game.enemySize;
@@ -230,10 +252,12 @@ class Game {
 
         //event listeners
         window.addEventListener('keydown', e => {
-            if(this.keys.indexOf(e.key) === -1) this.keys.push(e.key);
-            if(e.key === '1' && !this.fired) this.player.shoot();
-            this.fired = true;
-            if(e.key === 'r' && this.gameOver) this.restart();
+            if(!this.keys.includes(e.key)) this.keys.push(e.key);
+            if((e.key === '1' || e.keyCode === 32) && !this.fired) {
+                this.player.shoot();
+                this.fired = true;
+            } 
+            if((e.key === 'r'|| e.key === 'к') && this.gameOver) this.restart();
         });
         window.addEventListener('keyup', e => {
             this.fired = false;
