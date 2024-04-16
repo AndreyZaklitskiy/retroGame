@@ -209,7 +209,7 @@ class Boss {
             }
         })
         //collision detection boss/player
-        if(this.game.checkCollision(this, this.game.player) && this.lives > 0){
+        if(this.game.checkCollision(this, this.game.player) && this.lives > 0 && this.y >= 0 ){
             this.game.gameOver = true;
             this.lives = 0;
         }
