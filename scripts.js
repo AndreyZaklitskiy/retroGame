@@ -199,6 +199,7 @@ class Boss {
             this.speedX *= -1;
             this.speedY = this.height * 0.5;
         }
+        
         this.x += this.speedX;
         this.y += this.speedY;
         //collision detection boss/projectiles
