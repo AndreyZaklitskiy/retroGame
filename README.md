@@ -6,6 +6,6 @@ To move use:
 <kbd>A</kbd> or <kbd>←</kbd> to move left
 <kbd>D</kbd> or <kbd>→</kbd> to move right
 For shooting can be used:
-<kbd>Пробел</kbd> или клавишу <kbd>1</kbd>
+<kbd>Space</kbd> or key <kbd>1</kbd>
 
 ## [Try to Play](https://andreyzaklitskiy.github.io/retroGame/)
